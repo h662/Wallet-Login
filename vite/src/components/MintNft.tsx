@@ -1,10 +1,15 @@
 import { Button, Flex } from "@chakra-ui/react";
+import { JsonRpcSigner } from "ethers";
 import { FC } from "react";
 
-const MintNft: FC = () => {
+interface MintNftProps {
+  signer: JsonRpcSigner | null;
+}
+
+const MintNft: FC<MintNftProps> = ({ signer }) => {
   return (
     <Flex flexGrow={1} width="full" justifyContent="center" alignItems="center">
-      <Button colorScheme="green">민팅</Button>
+      {signer && <Button colorScheme="green">민팅</Button>}
     </Flex>
   );
 };

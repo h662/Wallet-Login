@@ -1,19 +1,44 @@
 import { Button, Flex } from "@chakra-ui/react";
-import { FC } from "react";
+import { JsonRpcSigner, ethers } from "ethers";
+import { Dispatch, FC, SetStateAction, useEffect } from "react";
 
-const Header: FC = () => {
+interface HeaderProps {
+  signer: JsonRpcSigner | null;
+  setSigner: Dispatch<SetStateAction<JsonRpcSigner | null>>;
+}
+
+const Header: FC<HeaderProps> = ({ signer, setSigner }) => {
+  const onClickMetamask = async () => {
+    try {
+      if (!window.ethereum) return;
+
+      const provider = new ethers.BrowserProvider(window.ethereum);
+
+      setSigner(await provider.getSigner());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => console.log(signer), [signer]);
+
   return (
     <Flex
-      fontSize="4xl"
       bgColor="green.300"
       width="full"
       justifyContent="center"
       py={4}
       position="relative"
     >
-      어떤 NFT가 나올까요?
+      <Flex fontSize="4xl">어떤 NFT가 나올까요?</Flex>
       <Flex position="absolute" h="100%" top={0} right={4} alignItems="center">
-        <Button>🦊 로그인</Button>
+        {signer ? (
+          `${signer.address.substring(0, 7)}...${signer.address.substring(
+            signer.address.length - 5
+          )}`
+        ) : (
+          <Button onClick={onClickMetamask}>🦊 로그인</Button>
+        )}
       </Flex>
     </Flex>
   );

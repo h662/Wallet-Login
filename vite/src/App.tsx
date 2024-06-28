@@ -1,11 +1,14 @@
 import { Flex } from "@chakra-ui/react";
-import { FC } from "react";
+import { FC, useState } from "react";
 
 import MintNft from "./components/MintNft";
 import MyNfts from "./components/MyNfts";
 import Header from "./components/Header";
+import { JsonRpcSigner } from "ethers";
 
 const App: FC = () => {
+  const [signer, setSigner] = useState<JsonRpcSigner | null>(null);
+
   return (
     <Flex
       minH="100vh"
@@ -13,8 +16,8 @@ const App: FC = () => {
       alignItems="center"
       flexDir="column"
     >
-      <Header />
-      <MintNft />
+      <Header signer={signer} setSigner={setSigner} />
+      <MintNft signer={signer} />
       <MyNfts />
     </Flex>
   );
